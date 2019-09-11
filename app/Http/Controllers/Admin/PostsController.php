@@ -16,7 +16,8 @@ class PostsController extends Controller
     //obtener todos los post
     public function index()
     {
-    	$posts = Post::all();//Post::published()->get();
+        //devuelve los posts del usuario autenticado
+    	$posts = auth()->user()->posts; //Post::all();//Post::published()->get();
     	return view('admin.posts.index', compact('posts'));
     }
 
@@ -33,12 +34,25 @@ class PostsController extends Controller
     {
         //validaciones
         $this->validate($request,[
-            'title' => 'required',
+            'title' => 'required|min:3|unique:posts',
         ]);
 
-        $post = Post::create(
-               $request->only('title')
-           );
+        //$post = Post::create( $request->only('title') );
+        $post = Post::create([
+            'title' => $request->get('title'),
+            'user_id' => auth()->id(),
+        ] );
+
+        //validar que no exista otra url igua
+        $url = str_slug($request->get('title'));
+
+        $postDuplicate = Post::where('url', 'LIKE', "{$url}%")->count();
+        if ($postDuplicate) {
+            $url .= '-' .$post->id;
+        }
+
+        $post->url = $url;
+        $post->save();
 
         return redirect()->route('admin.posts.edit', $post);
     }

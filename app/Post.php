@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     //permitir llenar campos
-    protected $fillable = ['title','body', 'iframe','except', 'published_at', 'category_id'];
+    protected $fillable = ['title','body', 'iframe','except', 'published_at', 'category_id', 'user_id'];
 
     //agregar carbon a las fechas
     protected $dates = ['published_at'];
@@ -41,6 +41,12 @@ class Post extends Model
         return $this->hasMany(Photo::class);
     }
 
+    //funcion para la relacion del usuario con los post
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     //creacion de un query scope, el cual devuelve datos filtrados que se puede reutilizar
     public function scopePublished($query) //$query = constructor de consultas de laravel
     {
@@ -49,12 +55,28 @@ class Post extends Model
                     ->latest('published_at'); //ordenados por fecha de publicacion
     }
 
+    //validar si esta publico
+    public function isPusblised()
+    {
+        return !is_null($this->published_at) && $this->published_at < today();
+    }
+
     //mutador para el title
-    public function setTitleAttribute($title)
+    /*public function setTitleAttribute($title)
     {
         $this->attributes['title'] = $title;
-        $this->attributes['url'] = str_slug($title);
+
+        //validar que no exista otra url igua
+        $url = str_slug($title);
+
+        $postDuplicate = Post::where('url', 'LIKE', "{$url}%")->count();
+        if ($postDuplicate) {
+            $url .= '-' . ++ $postDuplicate;
+        }
+
+        $this->attributes['url'] = $url;
     }
+    */
 
     //mutador para el campo fecha de publicacion
     public function setPublishedAtAttribute($published_at)

@@ -13,6 +13,21 @@ class PagesController extends Controller
     {
     	$posts = Post::published()->paginate(5);
 		$categories = Category::all();
-	    return view('welcome', compact('posts','categories'));
+	    return view('pages.home', compact('posts','categories'));
+    }
+    //regresar la vista acerca de 
+    public function about()
+    {
+	    return view('pages.about');
+    }
+    //regresar la vista servicios
+    public function services()
+    {
+	    return view('pages.services');
+    }
+    //regresar la contacto
+    public function contact()
+    {
+	    return view('pages.contact');
     }
 }

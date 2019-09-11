@@ -43,6 +43,7 @@ class PostsTableSeeder extends Seeder
         $post->body = "Este es el <b>cuerpo del post</b>, se supone que tiene mas letras que el except";
         $post->published_at = Carbon::now()->subDays(2);
         $post->category_id = 1;
+        $post->user_id = 1;
         $post->save();
 
         //agregar etiqueta
@@ -57,6 +58,7 @@ class PostsTableSeeder extends Seeder
         $post->body = "Este es el <b>cuerpo del post</b>, se supone que tiene mas letras que el except";
         $post->published_at = Carbon::now();
         $post->category_id = 2;
+        $post->user_id = 1;
         $post->save();
 
          //agregar etiqueta
@@ -70,6 +72,18 @@ class PostsTableSeeder extends Seeder
         $post->body = "Este es el <b>cuerpo del post</b>, se supone que tiene mas letras que el except";
         $post->published_at = Carbon::now()->subDays(4);
         $post->category_id = 2;
+        $post->user_id = 2;
+        $post->save();
+
+          $post = new Post;
+        //agregar los campos
+        $post->title = "Mi cuarto post";
+        $post->url = str_slug("Mi cuarto post");
+        $post->except = "Lo que aparece como vista previa";
+        $post->body = "Este es el <b>cuerpo del post</b>, se supone que tiene mas letras que el except";
+        $post->published_at = Carbon::now()->subDays(4);
+        $post->category_id = 2;
+        $post->user_id = 2;
         $post->save();
 
          //agregar etiqueta

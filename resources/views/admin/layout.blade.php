@@ -184,7 +184,7 @@ desired effect
               <!-- The user image in the navbar-->
               <img src="{{ asset('adminlte/img/user2-160x160.jpg')}}" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs">{{ auth()->user()->name }}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
@@ -192,11 +192,12 @@ desired effect
                 <img src="{{ asset('adminlte/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  {{ auth()->user()->name }} - Web Developer
+                  <small>Miembro desde {{ auth()->user()->created_at->format('d/M/Y') }}</small>
                 </p>
               </li>
               <!-- Menu Body -->
+              <!--
               <li class="user-body">
                 <div class="row">
                   <div class="col-xs-4 text-center">
@@ -209,15 +210,21 @@ desired effect
                     <a href="#">Friends</a>
                   </div>
                 </div>
-                <!-- /.row -->
               </li>
+             -->
               <!-- Menu Footer-->
               <li class="user-footer">
+                <!--
                 <div class="pull-left">
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
+              -->
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-default btn-flat">Cerrar Sesion</button>
+                  </form>
+                  
                 </div>
               </li>
             </ul>
@@ -388,6 +395,13 @@ desired effect
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 
+<!--INSERTA EL MODAL-->
+@unless(request()->is('admin/posts/*'))
+  @include('admin.posts.create')
+@endunless
+
+
+
 <!--ingresa scripts para otras paginas -->
 @stack('scripts')
 
@@ -398,7 +412,8 @@ desired effect
      Both of these plugins are recommended to enhance the
      user experience. -->
 
-@include('admin.posts.create')
-     
+
+
+
 </body>
 </html>

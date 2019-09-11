@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <form method="POST" action="{{ route('admin.posts.store')}}">
+  <form method="POST" action="{{ route('admin.posts.store', '#create')}}">
      @csrf
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -13,7 +13,7 @@
         <div class="modal-body">
           <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
              <!--- <label>Titulo de la publicación</label>-->
-              <input type="" name="title" value="{{old('title')}}" class="form-control" placeholder="Ingresa el titulo" required>
+              <input id="post_title" type="" name="title" value="{{old('title')}}" class="form-control" placeholder="Ingresa el titulo" autofocus required>
               {!! $errors->first('title', '<span class="help-block">
                 :message
               </span>') !!}
@@ -28,3 +28,21 @@
     </div>
 </form>
 </div>
+
+@push('scripts')
+<script type="text/javascript">
+  //validar si hay un # en la url
+  if (window.location.hash === '#create') {
+    $("#exampleModal").modal('show');
+  }
+
+  $("#exampleModal").on('hide.bs.modal', function(){
+    window.location.hash = '#';
+  });
+
+   $("#exampleModal").on('shown.bs.modal', function(){
+      $("#post_title").focus();
+       window.location.hash = '#create';
+  });
+</script>
+@endpush

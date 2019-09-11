@@ -14,7 +14,11 @@ use App\Category;
 |
 */
 
-Route::get('/', 'pagesController@home');
+Route::get('/', 'pagesController@home')->name('pages.home');
+Route::get('nosotros', 'pagesController@about')->name('pages.about');
+Route::get('servicios', 'pagesController@services')->name('pages.services');
+Route::get('contacto', 'pagesController@contact')->name('pages.contact');
+
 Route::get('blog/{post}', 'postsController@show')->name('posts.show');
 Route::get('categorias/{category}', 'CategoriesController@show')->name('categories.show');
 Route::get('etiquetas/{tag}', 'TagsController@show')->name('tags.show');
