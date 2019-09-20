@@ -4,6 +4,7 @@ namespace App;
 
 use App\Photo;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
@@ -13,6 +14,9 @@ class Post extends Model
 
     //agregar carbon a las fechas
     protected $dates = ['published_at'];
+
+    //el metodo with obtiene la relacion que se creo en el modelo post, agilizando las consutlas
+    //protected $with = ['category', 'tags', 'owner', 'photos'];
 
     //generar url amigable ->que busque la url por nombre del campo
     public function getRouteKeyName()
@@ -50,15 +54,39 @@ class Post extends Model
     //creacion de un query scope, el cual devuelve datos filtrados que se puede reutilizar
     public function scopePublished($query) //$query = constructor de consultas de laravel
     {
-       $query->whereNotNull('published_at') //que la fecha no sea null
-                    ->where('published_at', '<=', Carbon::now()) //que la fecha no sea mayor del dia actual
-                    ->latest('published_at'); //ordenados por fecha de publicacion
+         //el metodo with obtiene la relacion que se creo en el modelo post, agilizando las consutlas
+       $query->with(['category', 'tags', 'owner', 'photos'])
+            ->whereNotNull('published_at') //que la fecha no sea null
+            ->where('published_at', '<=', Carbon::now()) //que la fecha no sea mayor del dia actual
+            ->latest('published_at'); //ordenados por fecha de publicacion
     }
 
     //validar si esta publico
     public function isPusblised()
     {
         return !is_null($this->published_at) && $this->published_at < today();
+    }
+
+    //recuperar datos por permisos
+    public function scopeAllowed($query)
+    {
+        if (auth()->user()->can('view', $this)) {
+            return $query;
+        }
+
+        return $query->where('user_id', auth()->id());
+    }
+
+    //busqueda de posts ordenados por fecha
+    public function scopeByYearAndMonth($query)
+    {
+        DB::statement("SET lc_time_names = 'es_ES' ");
+        return Post::selectRaw('year(published_at) as year')
+            ->selectRaw('month(published_at) as month')
+            ->selectRaw('monthname(published_at) as monthname')
+            ->selectRaw('count(*) posts')
+            ->groupBy('year','month','monthname')
+            ->orderBy('published_at');
     }
 
     //mutador para el title
@@ -109,4 +137,5 @@ class Post extends Model
         //agregar etiquetas
         return $this->tags()->sync($tagIds);
     }
+
 }

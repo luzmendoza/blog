@@ -22,7 +22,12 @@ class CreatePostsTable extends Migration
             $table->mediumText('iframe')->nullable();
             $table->timestamp('published_at')->nullable()->nullable();
             $table->unsignedInteger('category_id')->nullable();
-            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');//se tiene que cambiar de tipo para hacer referencia
+
+            //llaves foraneas, eliminar el post cuando se elimine el usuario relacionado
+           // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

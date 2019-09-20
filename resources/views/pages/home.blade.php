@@ -24,7 +24,7 @@
         </h1>
 
         <!-- Blog Post -->
-        @foreach($posts as $post)
+        @forelse($posts as $post)
           <div class="card mb-4">
             <!--<img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">-->
             @include('includes.photospost')
@@ -47,7 +47,13 @@
               <a href="#">{{ $post->owner->name }}</a>
             </div>
           </div>
-        @endforeach
+        @empty
+          <div class="card mb-4">
+            <div class="card-body">
+              <h2 class="card-title">No hay publicaciones todavia</h2>
+            </div>
+          </div>
+        @endforelse
 
         <!-- Pagination -->
         <ul class="pagination justify-content-center mb-4">
@@ -57,7 +63,7 @@
           <li class="page-item disabled">
             <a class="page-link" href="#">Nuevos &rarr;</a>
           </li>-->
-          {{ $posts->links()}}
+          {{ $posts->appends(request()->all())->links()}}
         </ul>
 
       </div>
@@ -81,15 +87,6 @@
         <!-- Categories Widget -->
         @include('includes.widgetCategory')
         
-
-        <!-- Side Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">Side Widget</h5>
-          <div class="card-body">
-            You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
-          </div>
-        </div>
-
       </div>
 
     </div>

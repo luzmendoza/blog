@@ -192,7 +192,7 @@ desired effect
                 <img src="{{ asset('adminlte/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
 
                 <p>
-                  {{ auth()->user()->name }} - Web Developer
+                  {{ auth()->user()->name }} | {{ auth()->user()->getRoleDisplayNames() }} 
                   <small>Miembro desde {{ auth()->user()->created_at->format('d/M/Y') }}</small>
                 </p>
               </li>
@@ -219,10 +219,11 @@ desired effect
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
               -->
-                <div class="pull-right">
+               <!--- <div class="pull-right">-->
+                <div>
                   <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="btn btn-default btn-flat">Cerrar Sesion</button>
+                    <button class="btn btn-default btn-block">Cerrar Sesion</button>
                   </form>
                   
                 </div>
@@ -306,7 +307,7 @@ desired effect
       Anything you want
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2019 <a href="#">CEN</a>.</strong> Todos los derechos reservados.
   </footer>
 
   <!-- Control Sidebar -->

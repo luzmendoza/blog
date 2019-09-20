@@ -17,7 +17,7 @@ class PostsController extends Controller
     public function index()
     {
         //devuelve los posts del usuario autenticado
-    	$posts = auth()->user()->posts; //Post::all();//Post::published()->get();
+    	$posts = Post::allowed()->get();//auth()->user()->posts; //Post::all();//Post::published()->get();
     	return view('admin.posts.index', compact('posts'));
     }
 
@@ -59,15 +59,23 @@ class PostsController extends Controller
 
      public function edit(Post $post)
     {
-        $categories = Category::all();
-        $tags = Tag::all();
-        return view('admin.posts.edit', compact('post','categories','tags'));
+        //validar el acceso mediante politicas (policy)
+        $this->authorize('update', $post);
+
+        return view('admin.posts.edit', [
+            'post' => $post,
+            'tags' => Tag::all(),
+            'categories' => Category::all(),
+        ]);
     }
 
     //actualizar un post
     public function update(Post $post, StorePostRequest $request)
     {
         //las validaciones se hicieron en la clase StorePostRequest
+
+        //validar el acceso mediante politicas (policy)
+        $this->authorize('update', $post);
 
         $post->update($request->all());
 
@@ -81,6 +89,9 @@ class PostsController extends Controller
     //eliminar un post y sus relaciones
     public function destroy(Post $post)
     {
+         //validar el acceso mediante politicas (policy)
+        $this->authorize('delete', $post);
+
         //quitar las etiquetas asignadas al post
         $post->tags()->detach();
         //quitar las fotos asignadas al post

@@ -18,6 +18,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        //registro de evento y listener, se ejecuta en la consola con la instruccion php artisan event:generate y este crea los archivos para las clases
+        'App\Events\UserWasCReated' => [
+        'App\Listeners\SendLoginCredentials',
+         ],
     ];
 
     /**

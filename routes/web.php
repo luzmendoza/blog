@@ -14,6 +14,12 @@ use App\Category;
 |
 */
 
+//prueba de email para ver el correo que se enviara
+/*Route::get('email', function(){
+	return new App\Mail\LoginCredentials(App\User::first(), '123456');
+});
+*/
+
 Route::get('/', 'pagesController@home')->name('pages.home');
 Route::get('nosotros', 'pagesController@about')->name('pages.about');
 Route::get('servicios', 'pagesController@services')->name('pages.services');
@@ -26,14 +32,26 @@ Route::get('etiquetas/{tag}', 'TagsController@show')->name('tags.show');
 //rutas de administracion
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth'], function(){
 	Route::get('/', 'adminController@index')->name('admin');
-	Route::get('posts', 'PostsController@index')->name('admin.posts.index');
-	Route::get('posts/create', 'PostsController@create')->name('admin.posts.create');
-	Route::post('posts', 'PostsController@store')->name('admin.posts.store');
-	Route::get('posts/{post}', 'PostsController@edit')->name('admin.posts.edit');
-	Route::put('posts/{post}', 'PostsController@update')->name('admin.posts.update');
-	Route::delete('posts/{post}', 'PostsController@destroy')->name('admin.posts.destroy');
 
+	//simplificado de rutas... generando todas las rutas desde una sola y evitando el show, ademas agregando el prefijo de la ruta admin
+	Route::resource('posts', 'PostsController', ['except' => 'show', 'as' => 'admin']);
 
+	//rutas de usuarios simplificado
+	Route::resource('users', 'UsersController', ['as' => 'admin']);
+
+	Route::resource('roles', 'RolesController', ['except' => 'show','as' => 'admin']);
+	Route::resource('permisos', 'PermissionsController', ['only' => ['index', 'edit', 'update'], 
+					'as' => 'admin']);
+
+	//restricciones por middleware del paquete laravel permission
+	Route::middleware('role:Admin')
+		->put('users/{user}/roles', 'UsersRolesController@update')
+		->name('admin.users.roles.update');
+	Route::middleware('role:Admin')
+		->put('users/{user}/permissions', 'UsersPermissionsController@update')
+		->name('admin.users.permissions.update');
+
+	//rutas extras para posts
 	Route::post('posts/{post}/photos', 'PhotosController@store')->name('admin.posts.photos.store');
 	Route::delete('posts/{photo}', 'PhotosController@destroy')->name('admin.photos.destroy');
 });

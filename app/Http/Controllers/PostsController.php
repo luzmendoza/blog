@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\User;
 use App\Category;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,13 @@ class PostsController extends Controller
     	if ($post->isPusblised() || auth()->check()) {
     		//$post = Post::find($id);
 	    	$categories = Category::all();
-	    	return view('posts.show', compact('post','categories'));
-    	}
+            $authores = User::latest()->take(4)->get();
+            $lastposts = Post::latest('published_at')->take(5)->get();
+            //posts agrupados por mes y año
+            $archivo = Post::published()->byYearAndMonth()->get();
 
+	    	return view('posts.show', compact('post','categories','authores','lastposts','archivo'));
+    	}
 
     	abort(404);
     }

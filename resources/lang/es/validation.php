@@ -137,6 +137,9 @@ return [
         'title'   => [
             'required' => 'El :attribute es obligatorio.',
         ],
+        'name'   => [
+            'required' => 'El :attribute es obligatorio.',
+        ],
     ],
 
     /*
