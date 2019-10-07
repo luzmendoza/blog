@@ -16,12 +16,20 @@ class CategoriesController extends Controller
     	$posts = $category->posts()->published()->paginate(5);
 
     	 //todas estas busquedas son para la barra de un lado con widgets
-		$categories = Category::all();
-	    $authores = User::latest()->take(4)->get();
-        $lastposts = Post::latest('published_at')->take(5)->get();
-        //posts agrupados por mes y año
-        $archivo = Post::published()->byYearAndMonth()->get();
+		$data = [
+                'posts' => $posts ,
+                 'categories' => Category::all(),
+                 'authores' => User::latest()->take(4)->get(),
+                 'lastposts' => Post::latest('published_at')->take(5)->get(),
+                 'archivo' => Post::published()->byYearAndMonth()->get()//posts agrupados por mes y año
+            ];
 
-	    return view('pages.home', compact('posts','categories', 'filtro','authores','lastposts', 'archivo'));
+
+        if (request()->wantsJson()) {
+            return $data;
+        }
+
+	    // return view('pages.home', compact('posts','categories', 'filtro','authores','lastposts', 'archivo'));
+        return view('pages.home',$data);
     }
 }

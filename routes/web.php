@@ -20,7 +20,10 @@ use App\Category;
 });
 */
 
-Route::get('/', 'pagesController@home')->name('pages.home');
+ /*RUTAS COMENTADAS PARA USARSE CON VUE, LA PAGINA DE INICIO SE DEFINE AL FINAL PORQUE NO DEBE CHOCAR CON LO DE ADMINISTRACION
+*/
+Route::get('/', 'pagesController@spa')->name('pages.home');
+
 Route::get('nosotros', 'pagesController@about')->name('pages.about');
 Route::get('servicios', 'pagesController@services')->name('pages.services');
 Route::get('contacto', 'pagesController@contact')->name('pages.contact');
@@ -54,6 +57,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
 	//rutas extras para posts
 	Route::post('posts/{post}/photos', 'PhotosController@store')->name('admin.posts.photos.store');
 	Route::delete('posts/{photo}', 'PhotosController@destroy')->name('admin.photos.destroy');
+
+	//definiendo rutas para ver y eliminar mensajes de contacto
+	Route::resource('messages', 'MessagesController', ['as' => 'admin']);
 });
 
 
@@ -82,3 +88,7 @@ Route::get('email/verify', 'Auth\VerificationController@show')->name('verificati
 Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
   
+
+
+//RUTA PARA VUE
+//Route::get('/{any?}', 'pagesController@spa')->name('pages.home');

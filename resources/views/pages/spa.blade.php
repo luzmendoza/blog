@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +21,18 @@
   <!-- Custom styles for other template -->
   @stack('styles')
   
+  <style type="text/css">
+    .categoria a{
+      color: inherit;font-size: inherit;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+  </style>
 
 </head>
 
@@ -28,11 +41,12 @@
 <div id="app"><!--creacion de vue-->
 
   <!-- Navigation -->
-  @include('includes.nav')
+  <nav-bar></nav-bar>
 
-  <!--contenido dinamico-->
-  @yield('content')
-
+  <transition name="fade"><!--aplica clases para transiciones animadas-->
+    <!--CONTENT SECTION--> <!--con el key forza a renderizar el componente-->
+    <router-view :key="$route.fullPath"></router-view>
+  </transition>
 
    <!-- Footer -->
   <footer class="py-5 bg-dark">
@@ -50,6 +64,8 @@
   
   <!-- Custom scripts for other template -->
   @stack('scripts')
+
+
 
   <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 

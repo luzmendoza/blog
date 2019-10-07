@@ -15,6 +15,9 @@ class Post extends Model
     //agregar carbon a las fechas
     protected $dates = ['published_at'];
 
+    //modificar la fecha obtenida de la bd, mediante un accesor
+    protected $appends = ['published_date'];
+
     //el metodo with obtiene la relacion que se creo en el modelo post, agilizando las consutlas
     //protected $with = ['category', 'tags', 'owner', 'photos'];
 
@@ -136,6 +139,12 @@ class Post extends Model
 
         //agregar etiquetas
         return $this->tags()->sync($tagIds);
+    }
+
+    //
+    public function getPublishedDateAttribute()
+    {
+        return optional($this->published_at)->format('M d');
     }
 
 }

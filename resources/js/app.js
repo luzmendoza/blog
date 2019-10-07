@@ -5,6 +5,7 @@
  */
 
 require('./bootstrap');
+require('./turn.min');//esto es para la revista
 
 window.Vue = require('vue');
 
@@ -19,7 +20,16 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('nav-bar', require('./components/NavBar.vue').default);
+Vue.component('posts-list', require('./components/PostsList.vue').default);
+Vue.component('widgets-post', require('./components/WidgetsPost.vue').default);
+Vue.component('pagination-links', require('./components/PaginationLinks.vue').default);
+Vue.component('paginator', require('./components/Paginator.vue').default);
+Vue.component('redes-sociales', require('./components/RedesSociales.vue').default);
+Vue.component('form-contacto', require('./components/FormContacto.vue').default);
+
+import router from './routes';
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,4 +39,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    router
 });

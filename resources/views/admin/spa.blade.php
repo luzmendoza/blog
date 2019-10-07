@@ -131,7 +131,8 @@ desired effect
           <div class="alert alert-success">{{session('flash')}}</div>
         @endif
         
-        @yield('content')
+        <!--CONTENT SECTION--> <!--con el key forza a renderizar el componente-->
+        <router-view :key="$route.fullPath"></router-view>
 
     </section>
     <!-- /.content -->

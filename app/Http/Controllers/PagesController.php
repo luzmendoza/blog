@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
+    //pagina con vue
+    public function spa()
+    {
+        return view('pages.spa');
+    }
+
     //inicio
     public function home()
     {
@@ -23,16 +29,20 @@ class PagesController extends Controller
 
         $posts = $query->paginate();
 
-    	//$posts = Post::published()->paginate();
+         $data = [
+                'posts' => $posts ,
+                 'categories' => Category::all(),
+                 'authores' => User::latest()->take(4)->get(),
+                 'lastposts' => Post::latest('published_at')->take(5)->get(),
+                 'archivo' => Post::published()->byYearAndMonth()->get()//posts agrupados por mes y año
+            ];
 
-        //todas estas busquedas son para la barra de un lado con widgets
-		$categories = Category::all();
-        $authores = User::latest()->take(4)->get();
-        $lastposts = Post::latest('published_at')->take(5)->get();
-        //posts agrupados por mes y año
-        $archivo = Post::published()->byYearAndMonth()->get();
 
-	    return view('pages.home', compact('posts','categories','authores','lastposts', 'archivo'));
+        if (request()->wantsJson()) {
+           return $data;
+        }
+
+	    return view('pages.home', $data);
     }
     //regresar la vista acerca de 
     public function about()
